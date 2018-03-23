@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "8a9fad7e9863e65cc670505ffcac5721e6ee011e9d8d9a21d2bdd78f409f50aa"
+            "sha256": "6094eb61cc1e3e8db5b93443607d749b6931c2ae6d52727d7fe0ae95fd50ea17"
         },
         "host-environment-markers": {
             "implementation_name": "cpython",
@@ -119,6 +119,13 @@
                 "sha256:2612a191a8d5842bfa057e41ba50bbb9dcb722419d2408c78cff4758d0754868"
             ],
             "version": "==0.9999999"
+        },
+        "imbalanced-learn": {
+            "hashes": [
+                "sha256:d4d59b96780044ba97c6263e69cf145b9564241c402177f3d650b6c0c63fab93",
+                "sha256:e49550da4c98771afd0aa49db7710ab0d85e766754bad9fb767567c367d2b2e4"
+            ],
+            "version": "==0.3.3"
         },
         "ipykernel": {
             "hashes": [
@@ -675,6 +682,7 @@
                 "sha256:e721e53864f084f956f40f96124a74da0631ac13fbbd1ba99e8e2b5e9cafdf64",
                 "sha256:9515fe0a94e823fd90b08d22de45d7bde57c90edce705b22f5e1ecf7e1b653c8"
             ],
+            "markers": "python_version >= '3'",
             "version": "==0.30.0"
         },
         "widgetsnbextension": {
