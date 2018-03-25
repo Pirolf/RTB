@@ -15,6 +15,7 @@ jupyter = "*"
 matplotlib = "*"
 sklearn = "*"
 imbalanced-learn = "*"
+mlxtend = "*"
 
 
 [dev-packages]
