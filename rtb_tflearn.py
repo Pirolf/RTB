@@ -14,7 +14,7 @@ def shuffle(features, labels):
 
 
 input_layer = tflearn.input_data(shape=[None, 88])
-dense1 = tflearn.fully_connected(input_layer, 64,
+dense1 = tflearn.fully_connected(input_layer, 64, activation='relu',
                                  weights_init=tflearn.initializations.normal(),
                                  regularizer='L2', weight_decay=0.001)
 
@@ -60,6 +60,7 @@ smote = SMOTE(n_jobs=-1, random_state=42)
 # smoteenn = SMOTEENN(smote=SMOTE(n_jobs=-1))
 
 print("Resampling")
+
 resampled_features, resampled_labels = rus.fit_sample(features, labels[:, 1])
 resampled_features, resampled_labels = smote.fit_sample(
         resampled_features, resampled_labels)
@@ -72,7 +73,7 @@ shuffled_labels = to_categorical(shuffled_labels)
 
 print("Resampling done")
 
-model.fit(shuffled_features, shuffled_labels, n_epoch=10,
+model.fit(shuffled_features, shuffled_labels, n_epoch=1,
         validation_set=0.2,
         batch_size=16, show_metric=True)
 
@@ -106,9 +107,16 @@ def rtb_precision_recall(test_labels, y_preds):
 y_preds = model.predict(test_features)
 print(y_preds.shape)
 
+train_preds = model.predict(shuffled_features)
 
+print("--------test---------")
 rtb_confusion_matrix(test_labels, y_preds)
 rtb_f1_score(test_labels, y_preds)
 rtb_precision_recall(test_labels, y_preds)
 print(roc_auc_score(test_labels, y_preds))
 
+print("--------train---------")
+rtb_confusion_matrix(shuffled_labels, train_preds)
+rtb_f1_score(shuffled_labels, train_preds)
+rtb_precision_recall(shuffled_labels, train_preds)
+print(roc_auc_score(shuffled_labels, train_preds))
