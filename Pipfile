@@ -18,6 +18,7 @@ imbalanced-learn = "*"
 mlxtend = "*"
 "h5py" = "*"
 seaborn = "*"
+tflearn = "*"
 
 
 [dev-packages]
