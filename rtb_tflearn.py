@@ -16,13 +16,13 @@ def shuffle(features, labels):
 input_layer = tflearn.input_data(shape=[None, 88])
 dense1 = tflearn.fully_connected(input_layer, 64, activation='relu',
                                  weights_init=tflearn.initializations.normal(),
-                                 regularizer='L2', weight_decay=0.001)
+                                 regularizer='L2', weight_decay=0.01)
 
-dropout1 = tflearn.dropout(dense1, 0.9)
+dropout1 = tflearn.dropout(dense1, 0.8)
 dense2 = tflearn.fully_connected(dropout1, 32, weights_init=tflearn.initializations.normal(),
-                                 regularizer='L2', weight_decay=0.001)
+                                 regularizer='L2', weight_decay=0.01)
 
-dropout2 = tflearn.dropout(dense2, 0.9)
+dropout2 = tflearn.dropout(dense2, 0.8)
 softmax = tflearn.fully_connected(dropout2, 2, activation='softmax')
 
 # Regression using SGD with learning rate decay
@@ -54,16 +54,18 @@ model = tflearn.DNN(net, tensorboard_verbose=2)
 Resampling
 '''
 print(features.shape, labels.shape)
-rus = RandomUnderSampler(ratio={0: 1531*20, 1: 1531})
-# ros = RandomOverSampler(ratio={0: 1531*20, 1: 1531*5})
+rus = RandomUnderSampler(ratio={0: 1531*10, 1: 1531})
 smote = SMOTE(n_jobs=-1, random_state=42)
+#ros = RandomOverSampler(ratio={0: 1531*10, 1: 1531*5})
 # smoteenn = SMOTEENN(smote=SMOTE(n_jobs=-1))
 
 print("Resampling")
 
-resampled_features, resampled_labels = rus.fit_sample(features, labels[:, 1])
-resampled_features, resampled_labels = smote.fit_sample(
-        resampled_features, resampled_labels)
+resampled_features, resampled_labels = smote.fit_sample(features, labels[:, 1])
+#resampled_features, resampled_labels = smote.fit_sample(
+#        resampled_features, resampled_labels)
+#resampled_features, resampled_labels = ros.fit_sample(
+ #       resampled_features, resampled_labels)
 
 shuffled_features, shuffled_labels = shuffle(
     resampled_features, resampled_labels)
@@ -75,7 +77,7 @@ print("Resampling done")
 
 model.fit(shuffled_features, shuffled_labels, n_epoch=1,
         validation_set=0.2,
-        batch_size=16, show_metric=True)
+        batch_size=64, show_metric=True)
 
 '''
 Evaluation
