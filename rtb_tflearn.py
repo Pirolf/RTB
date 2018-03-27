@@ -54,8 +54,10 @@ model = tflearn.DNN(net, tensorboard_verbose=2)
 Resampling
 '''
 print(features.shape, labels.shape)
-rus = RandomUnderSampler(ratio={0: 1531*10, 1: 1531})
-smote = SMOTE(n_jobs=-1, random_state=42)
+#rus = RandomUnderSampler(ratio={0: 1531*80, 1: 1531})
+smote = SMOTE(n_jobs=-1, random_state=42, ratio={0: 798469, 1: 79847})
+rus2 = RandomUnderSampler(ratio={0: 1531*100, 1: 1531*50})
+ 
 #ros = RandomOverSampler(ratio={0: 1531*10, 1: 1531*5})
 # smoteenn = SMOTEENN(smote=SMOTE(n_jobs=-1))
 
@@ -64,8 +66,8 @@ print("Resampling")
 resampled_features, resampled_labels = smote.fit_sample(features, labels[:, 1])
 #resampled_features, resampled_labels = smote.fit_sample(
 #        resampled_features, resampled_labels)
-#resampled_features, resampled_labels = ros.fit_sample(
- #       resampled_features, resampled_labels)
+#resampled_features, resampled_labels = rus2.fit_sample(
+#        resampled_features, resampled_labels)
 
 shuffled_features, shuffled_labels = shuffle(
     resampled_features, resampled_labels)
@@ -75,9 +77,9 @@ shuffled_labels = to_categorical(shuffled_labels)
 
 print("Resampling done")
 
-model.fit(shuffled_features, shuffled_labels, n_epoch=1,
+model.fit(shuffled_features, shuffled_labels, n_epoch=5,
         validation_set=0.2,
-        batch_size=64, show_metric=True)
+        batch_size=32, show_metric=True)
 
 '''
 Evaluation
