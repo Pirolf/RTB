@@ -54,8 +54,10 @@ model = tflearn.DNN(net, tensorboard_verbose=2)
 Resampling
 '''
 print(features.shape, labels.shape)
-#rus = RandomUnderSampler(ratio={0: 1531*80, 1: 1531})
-smote = SMOTE(n_jobs=-1, random_state=42, ratio={0: 798469, 1: 79847})
+rus = RandomUnderSampler(ratio={0: 1531*10, 1: 1531})
+smote = SMOTE(n_jobs=-1, random_state=42,
+	      k_neighbors=1, m_neighbors=3,
+              ratio={0: 798469, 1: 79847})
 rus2 = RandomUnderSampler(ratio={0: 1531*100, 1: 1531*50})
  
 #ros = RandomOverSampler(ratio={0: 1531*10, 1: 1531*5})
