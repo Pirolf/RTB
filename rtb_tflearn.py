@@ -54,10 +54,9 @@ model = tflearn.DNN(net, tensorboard_verbose=2)
 Resampling
 '''
 print(features.shape, labels.shape)
-rus = RandomUnderSampler(ratio={0: 1531*10, 1: 1531})
+rus = RandomUnderSampler(ratio={0: 1531*30, 1: 1531})
 smote = SMOTE(n_jobs=-1, random_state=42,
-	      k_neighbors=1, m_neighbors=3,
-              ratio={0: 798469, 1: 79847})
+	      k_neighbors=3, m_neighbors=5)
 rus2 = RandomUnderSampler(ratio={0: 1531*100, 1: 1531*50})
  
 #ros = RandomOverSampler(ratio={0: 1531*10, 1: 1531*5})
@@ -65,9 +64,9 @@ rus2 = RandomUnderSampler(ratio={0: 1531*100, 1: 1531*50})
 
 print("Resampling")
 
-resampled_features, resampled_labels = smote.fit_sample(features, labels[:, 1])
-#resampled_features, resampled_labels = smote.fit_sample(
-#        resampled_features, resampled_labels)
+resampled_features, resampled_labels = rus.fit_sample(features, labels[:, 1])
+resampled_features, resampled_labels = smote.fit_sample(
+        resampled_features, resampled_labels)
 #resampled_features, resampled_labels = rus2.fit_sample(
 #        resampled_features, resampled_labels)
 
@@ -79,7 +78,7 @@ shuffled_labels = to_categorical(shuffled_labels)
 
 print("Resampling done")
 
-model.fit(shuffled_features, shuffled_labels, n_epoch=5,
+model.fit(shuffled_features, shuffled_labels, n_epoch=3,
         validation_set=0.2,
         batch_size=32, show_metric=True)
 
@@ -103,13 +102,6 @@ def rtb_f1_score(test_labels, y_preds):
     print("f1 score = %0.3f" % f)
 
 
-def rtb_precision_recall(test_labels, y_preds):
-    precision, recall, fbeta_score, support = precision_recall_fscore_support(
-        test_labels[:, 1], y_preds.argmax(axis=-1))
-    print("Precision = %0.3f, Recall = %0.3f" % (np.mean(precision), np.mean(recall)))
-    return precision, recall
-
-
 y_preds = model.predict(test_features)
 print(y_preds.shape)
 
@@ -118,11 +110,9 @@ train_preds = model.predict(shuffled_features)
 print("--------test---------")
 rtb_confusion_matrix(test_labels, y_preds)
 rtb_f1_score(test_labels, y_preds)
-rtb_precision_recall(test_labels, y_preds)
-print(roc_auc_score(test_labels, y_preds))
+print(roc_auc_score(test_labels[:,1], y_preds.argmax(axis=-1)))
 
 print("--------train---------")
 rtb_confusion_matrix(shuffled_labels, train_preds)
 rtb_f1_score(shuffled_labels, train_preds)
-rtb_precision_recall(shuffled_labels, train_preds)
-print(roc_auc_score(shuffled_labels, train_preds))
+print(roc_auc_score(shuffled_labels[:,1], train_preds.argmax(axis=-1)))
