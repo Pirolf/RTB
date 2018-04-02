@@ -19,6 +19,7 @@ mlxtend = "*"
 "h5py" = "*"
 seaborn = "*"
 tflearn = "*"
+xgboost = "*"
 
 
 [dev-packages]
